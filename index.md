@@ -74,11 +74,6 @@ Not cool? Throw it out!
 
 Rust has lost more features than many languages have in the first place.
 
-# Empiric Iteration
-
-Iteration does not mean identity crisis. The 'how' may not be clear, but the
-goal can be.
-
 # Epoch Rust
 
 Rust has undergone four epochs so far:
@@ -342,153 +337,12 @@ March 2014: RFC process begins
 - 419 submitted so far, 122 accepted, 80 open
 - Even the core team goes through this process
 
-# Intermezzo: Rust today: Ownership
-
-```ruby
-v = []
-
-v.push("Hello")
-
-x = v[0]
-
-v.push("world")
-
-puts x
-```
-
-# Intermezzo: Rust today: Ownership
-
-```cpp
-#include<iostream>
-#include<vector>
-#include<string>
-
-int main() {
-    std::vector<std::string> v;
-
-    v.push_back("Hello");
-
-    std::string& x = v[0];
-
-    v.push_back("world");
-
-    std::cout << x;
-}
-```
-
-# Intermezzo: Rust today: Ownership
-
-```bash
-$ g++ hello.cpp -Wall -Werror
-$ ./a.out
-Segmentation fault (core dumped)
-```
-
-# Intermezzo: Rust today: Ownership
-
-> If the new size() is greater than capacity() then all iterators and
-> references (including the past-the-end iterator) are invalidated.
-
-# Intermezzo: Rust today: Ownership
-
-```
-fn main() {
-    let mut v = vec![];
-
-    v.push("Hello");
-
-    let x = &v[0];
-
-    v.push("world");
-
-    println!("{}", x);
-}
-```
-
-# Intermezzo: Rust today: Ownership
-
-```bash
-$ cargo run
-   Compiling hello_world v0.0.1 (file:///Users/you/src/hello_world)
-error: cannot borrow `v` as mutable because it is also borrowed as immutable
-    v.push("world");
-    ^
-note: previous borrow of `v` occurs here; the immutable borrow prevents
-subsequent moves or mutable borrows of `v` until the borrow ends
-    let x = &v[0];
-             ^
-note: previous borrow ends here
-fn main() {
-...
-}
-^
-error: aborting due to previous error
-```
-
-# Intermezzo: Rust today: Concurrency
-
-```
-use std::thread::Thread;
-
-fn main() {
-    let guards: Vec<_> = (0..10).map(|_| {
-        Thread::scoped(|| {
-            println!("Hello, world!");
-        })
-    }).collect();
-}
-```
-
-# Intermezzo: Rust today: Concurrency
-
-```
-use std::thread::Thread;
-
-fn main() {
-    let mut numbers = vec![1, 2, 3];
-
-    for i in 0..3 {
-        Thread::scoped(move || {
-            for j in 0..3 { numbers[j] += 1 }
-        });
-    }
-}
-```
-
----
-
-```bash
-error: capture of moved value: `numbers`
-```
-
-# Intermezzo: Rust today: Concurrency
-
-```
-use std::thread::Thread;
-use std::sync::{Arc, Mutex};
-
-fn main() {
-    let numbers = Arc::new(Mutex::new(vec![1, 2, 3]));
-
-    for i in 0us..3 {
-        let number = numbers.clone();
-
-        Thread::scoped(move || {
-            let mut array = number.lock().unwrap();
-
-            array[i] += 1;
-
-            println!("numbers[{}] is {}", i, array[i]);
-        });
-    }
-}
-```
-
 # The Release Year
 
 * Rust 1.0.0-alpha – Friday, Jan 9, 2015
-* Rust 1.0.0-beta1 – Week of Feb 16, 2015
-* Rust 1.0.0 – One or more six-week cycles later
+* Rust 1.0.0-alpha2 – Friday, Feb 20, 2015
+* Rust 1.0.0-beta – Friday, April 3, 2015
+* Rust 1.0.0 – Friday, May 15, 2015
 
 Goal: get _some_ Rust into Firefox by the end of 2015.
 
